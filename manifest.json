@@ -1,10 +1,29 @@
 {
-    "manifest_version": 3,
-    "name": "Email Assistant",
-    "version": "1.2",
-    "permissions": ["scripting", "activeTab", "storage"],
-    "action": {
-      "default_popup": "index.html"
-    }
+  "name": "Gmail Assistant",
+  "version": "1.0",
+  "description": "An assistant that helps you navigate Gmail.",
+  "key":"MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC4YyYNUCztXwe6CW0h5Ux6/LalY3fJIODILYJhwdrsfc6+cCG9sPaPRxZWk2P0zN0HfPpc8GQdduYA+2gLoMeQ4l54hjD3wks4SGsANiVyGpAi7SV//rjxanC6C7A7jdQAjepvLpXCm9rwoN2DDrkeS2X6e0fNZnpsf+GRBY+QQTnxFbSNbuN/TuHHln/BprBRyHQXn+ZQYtWFBicO4pLc99u0mSiKsOs8bzcWcawk4npui43iC4vcf4JqjjBz3oE+RY4nBuwCFPdK6tXar7QsyvPRB+GMmJa1sbFg/bK/SAPVU3KyWfO1IDY1deFVhxPtEUN63DNuuXQqHo/kbm3FAgMBAAECggEAClcbFO+MWXJ1GTh6m4ZDo/kEmCFMICYdHPS6ZVeM+qqye6kHp17jcNUEem3xEtMjSQ537trXTnSywNbYdqB5WJVtRVaHK/nEJJ+hCoW+01eMgjzo17T186nrsO9DXo+dVjufLEWBRgTeAhUPXxBmDr4dNa8Qr4Lh9jA0uuCENMtvPuP5WQUDujD+Shg5k8zRZDhwo+I/VXPfnA7mvCAICibi5sUh18iQRdSiN4xXWzKDxd9Xgi8qSBOYNYa0GLVEzl5Sg8Crbx4oamb5HjRP++iOpl/ex8VF4VU6e8RdHxeycT2g/yM+wpBOKwionICT1qLv7UZ5wQKgXcMSZiC3iQKBgQDfhhcDclgbiAzj6aNjZIaKx6QqmA3PTvuuaZyN4PN7lD0FnFSDCxHj1ExCinNQYK5m8Zu9J+ub4P5f8lf/szw2ppmEHy0SlWpjuMESarqzivAd2gTABRGJgcXj+/aEWkjBSeJY9PqsyNN1W21raOy9ghQfZgmAbLg2p//bzFbQLQKBgQDTLWMVRTSBtE3IOfaL94p2O37UwE42lIR9myjDi5n+6NHjcLXc7rXR1PqsgsKeUbeAAExgvLmHhIrHhsIeeWLaG3fOVLzF0F8Ie566+rKORyk2DxOg4k1HkQHysf19URsVsO2/0FYba1ihe7b0O4s3UcWanpuQr65KJBt0DLr6+QKBgAe3AxhVXAEnQvqi18bYc2Ra26m0sdVT7o/oiUTEXOMJDMoiyS/0s9tfOnqZeL1veNWIxU1UEWfB7kW1gaALuapROb87rDyV96QVfmR6VpNX2k3NdpiCFEbgucnSqoGK9DPnru5PFk/cZqAIVdB9QJ6R3Mvwo6dRGVKZndUiSmTJAoGALyoK4BxFvtYzLQ3tB5Oww/lDuWZ90WjYMmlt8EaEjU8YWXC53W8fAo9LsS2/I7bigd8PL+fWk/LBQBDT2BSKRGYwGtAIHTINl4psiBwntukjxiQV4S/JzLsRMVAZalyr7OtIHjf8k0ElWWOVF/UYgbFsrbzQx77E8WAhFYkmVZkCgYEApTq0LDMbv/Fc2axnGpYvDArbf2r2XYVQIzPxrqqCrjQrPPyetsJXHh7gdCuJrlvfutbFAdianiGkB0jVU16LsujF9sX6/VkeUf1CdVbQm1opWRG2L+XKNg0JsWgt2T/2x/ENtDITR64xQsPCTNRNYnpgJoLPSRcHySoNokaN8Pw=",
+  "oauth2": {
+  "client_id": "239151256127-fjhi5mnaeputc5go9fenrrbh6pn0q8ec.apps.googleusercontent.com",
+  "scopes":["https://www.googleapis.com/auth/gmail.readonly",
+  "https://www.googleapis.com/auth/gmail.labels",
+  "https://www.googleapis.com/auth/gmail.modify"]
+},
+"host_permissions": [
+  "https://*.googleapis.com/",
+  "https://mail.google.com/"
+],
+  "manifest_version": 3,
+  "action": {
+    "default_title": "Gmail Assistant"
+  },
+  "permissions": [
+  "identity","sidePanel","storage","scripting"
+],
+  "side_panel":{
+    "default_path":"index.html"
+  },
+  "background": {
+    "service_worker": "service-worker.js"
   }
-  
+}
