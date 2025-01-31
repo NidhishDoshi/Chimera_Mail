@@ -1,0 +1,10 @@
+{
+    "manifest_version": 3,
+    "name": "Email Assistant",
+    "version": "1.2",
+    "permissions": ["scripting", "activeTab", "storage"],
+    "action": {
+      "default_popup": "index.html"
+    }
+  }
+  
