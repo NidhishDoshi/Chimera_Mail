@@ -7,7 +7,9 @@
   "client_id": "239151256127-fjhi5mnaeputc5go9fenrrbh6pn0q8ec.apps.googleusercontent.com",
   "scopes":["https://www.googleapis.com/auth/gmail.readonly",
   "https://www.googleapis.com/auth/gmail.labels",
-  "https://www.googleapis.com/auth/gmail.modify"]
+  "https://www.googleapis.com/auth/gmail.modify",
+  "https://www.googleapis.com/auth/contacts.readonly",
+  "https://www.googleapis.com/auth/gmail.send"]
 },
 "host_permissions": [
   "https://*.googleapis.com/",
@@ -25,5 +27,21 @@
   },
   "background": {
     "service_worker": "service-worker.js"
-  }
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://mail.google.com/*"],
+      "css": [
+        "css/gmail-content.css"
+      ],
+      "js": [
+        "js/gmail-content.js"
+      ]
+    },
+    {
+      "matches": ["<all_urls>"],
+      "js": ["oauth.js"]
+    }
+  ]
 }
