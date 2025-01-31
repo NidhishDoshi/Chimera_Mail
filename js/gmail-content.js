@@ -52,7 +52,7 @@ setInterval(() => {
   
   
   async function fetchFromOpenai(original_mail, inputData) {
-    const GEMINI_API_KEY="AIzaSyCBDgkTZBU-UKf19GouSm3e2YQ45MGvozE";
+    const GEMINI_API_KEY="<Enter your GEMINI_API_KEY>";
     const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-8b:generateContent?key=${GEMINI_API_KEY}`;
     const emailBody = inputData;
     
