@@ -16,6 +16,7 @@
   height: 35px;
 }
 
+/* Button style on api arror */
 .magic-button-icon.error {
   color: darkred;
 }
@@ -27,6 +28,10 @@
   transform: rotate(5deg);
   scale: 0.85;
 }
+
+
+/* Loading animation */
+/* Thanks to https://loading.io/css/ */
 
 .lds-dual-ring {
   display: inline-block;

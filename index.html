@@ -3,6 +3,7 @@
 <head>
   <title>Gmail Assistant</title>
   <style>
+    /* Existing styles remain the same */
     body {
       font-family: Arial, sans-serif;
       margin: 0;
@@ -23,10 +24,9 @@
       box-shadow: 0 2px 4px rgba(0,0,0,0.1);
       display: flex;
       align-items: center;
-      justify-content: flex-start; 
+      justify-content: flex-start;
       gap: 10px;
     }
-
     .menu {
       display: flex;
       gap: 10px;
@@ -40,7 +40,6 @@
       cursor: pointer;
       font-size: 14px;
       transition: background-color 0.2s;
-      opacity: 0.5;
     }
     
     button:hover {
@@ -206,29 +205,82 @@
       font-size: 16px;
       line-height: 1.5;
     }
-
+    /* Updated chat-related styles */
     #home-page {
-      display: none;
-      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      height: calc(100vh - 70px); /* Subtract header height */
+      position: relative;
+      padding: 0;
       max-width: 800px;
       margin: 0 auto;
     }
 
+    #chat-wrapper {
+      flex-grow: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column-reverse;
+      height: 70vh; /* This makes content flow from bottom up */
+      padding: 20px;
+      padding-bottom: 2px; /* Space for compose container */
+    }
+
+    #chat-container {
+      display: flex;
+      flex-direction: column;
+      max-height: 100%;
+      overflow-y: auto;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+
+    .chat-message {
+      max-width: 80%;
+      padding: 12px 16px;
+      margin: 4px 0;
+      border-radius: 12px;
+      word-wrap: break-word;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .chat-message.user {
+      background-color: #e3f2fd;
+      align-self: flex-end;
+      border-bottom-right-radius: 4px;
+    }
+
+    .chat-message.assistant {
+      background-color: #f5f5f5;
+      align-self: flex-start;
+      border-bottom-left-radius: 4px;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
     .compose-container {
-      background: white;
+      position: fixed;
       border: 3px solid #e0e0e0;
       border-radius: 8px;
-      padding: 6px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-      margin-top: 20px;
-      position: sticky;
-      position: fixed;
-      bottom: 20px;
+      bottom: 0;
       left: 50%;
       transform: translateX(-50%);
       width: 90%;
       max-width: 800px;
-      z-index: 9999;
+      background: white;
+      padding: 6px;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+      border-top: 1px solid #e0e0e0;
+      z-index: 1000;
       box-sizing: border-box;
     }
 
@@ -236,20 +288,19 @@
       width: 100%;
       min-height: 50px;
       padding: 12px;
-      border: 0px solid #e0e0e0;
+      border: 1px solid #e0e0e0;
       border-radius: 4px;
       font-family: Arial, sans-serif;
       font-size: 14px;
+      overflow: hidden;
       resize: none;
-      margin-bottom: 9px;
+      margin-bottom: 8px;
       box-sizing: border-box;
     }
-
     #message-textarea:focus {
       outline: none;
       border-color: #4285f4;
     }
-
     .compose-actions {
       display: flex;
       justify-content: flex-end;
@@ -262,10 +313,46 @@
       padding-right: 12px;
       padding-left: 12px;
     }
-
     #send-button:hover {
       background-color: #3367d6;
     }
+    table {
+            border-collapse: collapse;
+            width: 100%;
+            max-width: 800px;
+            margin: 20px auto;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f5f5f5;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background-color: #f8f8f8;
+        }
+
+        .calendar-btn {
+            padding: 8px 12px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .calendar-btn:hover {
+            background-color: #45a049;
+        }
+    /* Keep other existing styles */
   </style>
 </head>
 <body>
@@ -277,10 +364,15 @@
           <button id="home">Home</button>
           <button id="loadEmails">Inbox</button>
           <button id="labeledGroups">Labels</button>
+          <button id="deadlines">Deadlines</button>
         </div>
       </div>
     </div>
     <div id="home-page">
+      <button id="start">Start</button>
+      <div id="chat-wrapper">
+        <div id="chat-container"></div>
+      </div>
       <div class="compose-container">
         <textarea id="message-textarea" placeholder="Type your message here..."></textarea>
         <div class="compose-actions">
