@@ -58,7 +58,7 @@
 #             token=token,
 #             refresh_token=None,
 #             token_uri="https://oauth2.googleapis.com/token",
-#             client_id="484040560225-3rfkv3crtsd8va1r5l7fpmimfq5dpk57.apps.googleusercontent.com",
+#             client_id="",
 #             client_secret="enter client secret",
 #             scopes=SCOPES
 #         )
@@ -725,7 +725,7 @@ def get_gmail_service():
             token=token,
             refresh_token=None,
             token_uri="https://oauth2.googleapis.com/token",
-            client_id="240312093323-53hpse4kpub14gidnguhi7g0n5llt31e.apps.googleusercontent.com",
+            client_id="*enter client id*",
             client_secret="*enter client secret*",
             scopes=SCOPES
         )
