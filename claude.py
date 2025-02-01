@@ -59,7 +59,7 @@
 #             refresh_token=None,
 #             token_uri="https://oauth2.googleapis.com/token",
 #             client_id="484040560225-3rfkv3crtsd8va1r5l7fpmimfq5dpk57.apps.googleusercontent.com",
-#             client_secret="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",
+#             client_secret="enter client secret",
 #             scopes=SCOPES
 #         )
 #         return build('gmail', 'v1', credentials=credentials)
