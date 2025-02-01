@@ -18,6 +18,7 @@ If this doesnt run you'll have to automatically run pip install <package-name> f
 Go to chrome://extensions/ -> Enable developer options -> Load Unpacked -> Select the google_Aith dir and upload it. This will load the entension locally.
 Go to your google Oauth page, enable Gmail and Google calendar api's,add all available scopes for gmail and calendar for your project and then , create two OAuth clients: A chrome extension client with extension id obtained from the chrome://extensions/ page: the client id obtained from here must be replaced in google_Auth/manifest.json.Then 
 create a web application OAuth client with Allowed Javascript origins: http://localhost , Authorized redirect URI's : https://<extension_id>.chromiumapp.org/oauth2, http://localhost:8000/oauth2/callback: creating this makes two ids: client_id and client_secret which needs to be added to app.py.
+Also add the authenticated users for your application as its still in the testing stage. Only these emails can be used with the extension.
 
 
 On a separate terminal, run the following
