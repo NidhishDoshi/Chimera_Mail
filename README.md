@@ -2,7 +2,7 @@
 
 Chimera mail is a chrome extension which allows users to automatically sort mails, obtain deadlines, send enhanced replies based on context and ask questions on your mail corpus!
 ```bash
-git clone <url>
+git clone https://github.com/NidhishDoshi/Chimera_Mail.git
 ```
 
 ## Installation
