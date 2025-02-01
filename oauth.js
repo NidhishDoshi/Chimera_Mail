@@ -885,7 +885,7 @@ function showEmailDetail(subject, from, body, date, messageId, currentLabelIds, 
       if(difference.length === 0){
         difference=["Nothing"];
       }
-      const prompt = "You are an intelligent email categorization assistant.Your task is to analyze the provided email content and select up to two applicable labels from a list of categories provided.These are labels that have not been previously applied to the email.If you determine that no additional labels are necessary, you may indicate that no further labels are required.**Instructions:** 1.**Input Format:** - Email Content:"+body+"- Applicable Labels:"+difference.join(', ')+"2.**Processing Steps:** - Read the email content carefully.- Review the list of applicable labels.- Identify the context, key themes, and actionable items within the email.- Match the identified themes with the applicable labels. 3.**Output Format:** - If applicable labels are found, return a list of at most two most relevant labels.- If no additional labels are applicable, return a message indicating that no further labels are required.**Example Output:** - Selected Labels: [Label 1, Label 2]- Or: Selected Label: [Label]- Or: 'No further labels are required.' ";
+      const prompt = "You are an intelligent email categorization assistant.Your task is to analyze the provided email content and select up to two applicable labels from a list of categories provided.These are labels that have not been previously applied to the email.If you determine that no additional labels are necessary, you may indicate that no further labels are required.*Instructions:* 1.*Input Format:* - Email Content:"+body+"- Applicable Labels:"+difference.join(', ')+"2.*Processing Steps:* - Read the email content carefully.- Review the list of applicable labels.- Identify the context, key themes, and actionable items within the email.- Match the identified themes with the applicable labels. 3.*Output Format:* - If applicable labels are found, return a list of at most two most relevant labels.- If no additional labels are applicable, return a message indicating that no further labels are required.*Example Output:* - Selected Labels: [Label 1, Label 2]- Or: Selected Label: [Label]- Or: 'No further labels are required.' ";
 
       const response = await fetch(GEMINI_API_URL, {
         method: "POST",
@@ -903,47 +903,12 @@ function showEmailDetail(subject, from, body, date, messageId, currentLabelIds, 
 
       const result = await response.json();
       const suggestions = result.candidates[0].content.parts[0].text.trim();
-      if(suggestions=="No further labels are required."){
-        console.log("No");
+      
         suggestedLabelsDiv.innerHTML = `
         <div style="margin-top: 10px; padding: 10px; background-color: #f0f0f0; border-radius: 4px;">
           <strong></strong> ${suggestions}
         </div>
       `;
-      }
-      else{
-        let abc=suggestions.split(": ")[1];
-        let ans=abc.replace(/\[|\]/g,"").split(",").map(item=>item.trim());
-        suggestedLabelsDiv.innerHTML = `
-        <div style="margin-top: 10px; padding: 10px; background-color: #f0f0f0; border-radius: 4px;">
-          <strong>Suggested Labels:</strong> ${ans}
-        </div>
-      `;
-        for(let i=0;i<ans.length;i++){
-          console.log(ans[i]);
-          try{
-            const lid = allLabels.find(label=>label.name === ans[i]);
-            if(lid){
-              await modifyLabels(messageId,token,[lid.id],[]);
-              alert(`Label ${ans[i]} added successfully`);
-            }
-          } catch(error){
-            console.error("Error adding label:", error);
-            alert("Failed to add label");
-          }
-        }
-        const response = await fetch(
-          `https://gmail.googleapis.com/gmail/v1/users/me/messages/${messageId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        const emailData = await response.json();
-        showEmailDetail(subject, from, body, date, messageId, emailData.labelIds, allLabels, token);
-      }
     } catch (error) {
       console.error("Error suggesting labels:", error);
       suggestedLabelsDiv.innerHTML = "Error generating label suggestions.";
