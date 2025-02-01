@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Gmail Assistant</title>
+  <style>
+    /* Existing styles remain the same */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      width: 100%;
+      overflow-x: hidden;
+      background-color: #f8f9fa;
+    }
+
+    .header {
+      position: sticky;
+      top: 0;
+      background-color: #fff;
+      padding: 16px;
+      border-bottom: 1px solid #e0e0e0;
+      z-index: 100;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 10px;
+    }
+    .menu {
+      display: flex;
+      gap: 10px;
+    }
+    button {
+      padding: 12px 24px;
+      background-color: #4285f4;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background-color 0.2s;
+    }
+    
+    button:hover {
+      background-color: #3367d6;
+    }
+
+    button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+
+    .hamburger {
+      display: none;
+      font-size: 24px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: black;
+    }
+
+    .menu-items {
+      display: flex;
+      gap: 10px;
+    }
+
+    @media (max-width: 300px) {
+      .menu {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 60px;
+        left: 0;
+        background: white;
+        width: 200px;
+        border-radius: 8px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        padding: 10px;
+      }
+
+      .menu.show {
+        display: flex;
+      }
+
+      .hamburger {
+        display: block;
+      }
+
+      .menu-items {
+        flex-direction: column;
+        width: 100%;
+      }
+
+      .menu-items button {
+        width: 100%;
+        text-align: left;
+      }
+    }
+
+    #message-container {
+      padding: 16px;
+      overflow-y: auto;
+      height: calc(100vh - 70px);
+    }
+
+    .message-card {
+      background: white;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .message-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+    }
+
+    #email-detail {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: white;
+      z-index: 1000;
+      overflow-y: auto;
+      padding: 20px;
+      display: none;
+    }
+
+    .visible {
+      display: block !important;
+    }
+
+    .back-button {
+      background-color: transparent;
+      color: #4285f4;
+      border: 1px solid #4285f4;
+      margin-bottom: 16px;
+    }
+
+    .label-card {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .label-name {
+      font-size: 18px;
+      font-weight: 500;
+      color: #1a73e8;
+    }
+
+    .label-count {
+      font-size: 14px;
+      color: #5f6368;
+    }
+
+    .label-header {
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .back-to-labels {
+      padding: 8px 16px;
+      background-color: transparent;
+      color: #1a73e8;
+      border: 1px solid #1a73e8;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .back-to-labels:hover {
+      background-color: #f1f3f4;
+    }
+
+    .no-messages, .error-message {
+      padding: 16px;
+      text-align: center;
+      color: #5f6368;
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      margin-top: 16px;
+    }
+
+    .error-message {
+      color: #d93025;
+      background-color: #fce8e6;
+    }
+
+    .no-labels {
+      padding: 24px;
+      text-align: center;
+      color: #5f6368;
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      margin: 16px;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+    /* Updated chat-related styles */
+    #home-page {
+      display: flex;
+      flex-direction: column;
+      height: calc(100vh - 70px); /* Subtract header height */
+      position: relative;
+      padding: 0;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    #chat-wrapper {
+      flex-grow: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column-reverse;
+      height: 70vh; /* This makes content flow from bottom up */
+      padding: 20px;
+      padding-bottom: 2px; /* Space for compose container */
+    }
+
+    #chat-container {
+      display: flex;
+      flex-direction: column;
+      max-height: 100%;
+      overflow-y: auto;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+
+    .chat-message {
+      max-width: 80%;
+      padding: 12px 16px;
+      margin: 4px 0;
+      border-radius: 12px;
+      word-wrap: break-word;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .chat-message.user {
+      background-color: #e3f2fd;
+      align-self: flex-end;
+      border-bottom-right-radius: 4px;
+    }
+
+    .chat-message.assistant {
+      background-color: #f5f5f5;
+      align-self: flex-start;
+      border-bottom-left-radius: 4px;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .compose-container {
+      position: fixed;
+      border: 3px solid #e0e0e0;
+      border-radius: 8px;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90%;
+      max-width: 800px;
+      background: white;
+      padding: 6px;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+      border-top: 1px solid #e0e0e0;
+      z-index: 1000;
+      box-sizing: border-box;
+    }
+
+    #message-textarea {
+      width: 100%;
+      min-height: 50px;
+      padding: 12px;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      overflow: hidden;
+      resize: none;
+      margin-bottom: 8px;
+      box-sizing: border-box;
+    }
+    #message-textarea:focus {
+      outline: none;
+      border-color: #4285f4;
+    }
+    .compose-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    #send-button {
+      background-color: #4285f4;
+      border-radius: 50px;
+      padding-right: 12px;
+      padding-left: 12px;
+    }
+    #send-button:hover {
+      background-color: #3367d6;
+    }
+    table {
+            border-collapse: collapse;
+            width: 100%;
+            max-width: 800px;
+            margin: 20px auto;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f5f5f5;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background-color: #f8f8f8;
+        }
+
+        .calendar-btn {
+            padding: 8px 12px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .calendar-btn:hover {
+            background-color: #45a049;
+        }
+    /* Keep other existing styles */
+  </style>
+</head>
+<body>
+  <div id="main-view">
+    <div class="header">
+      <button class="hamburger" id="hamburger">Menu</button>
+      <div class="menu" id="menu">
+        <div class="menu-items">
+          <button id="home">Home</button>
+          <button id="loadEmails">Inbox</button>
+          <button id="labeledGroups">Labels</button>
+          <button id="deadlines">Deadlines</button>
+        </div>
+      </div>
+    </div>
+    <div id="home-page">
+      <button id="start">Start</button>
+      <div id="chat-wrapper">
+        <div id="chat-container"></div>
+      </div>
+      <div class="compose-container">
+        <textarea id="message-textarea" placeholder="Type your message here..."></textarea>
+        <div class="compose-actions">
+          <button id="send-button">Send</button>
+        </div>
+      </div>
+    </div>
+    <div id="message-container"></div>
+  </div>
+  <div id="email-detail"></div>
+  <script src="oauth.js"></script>
+</body>
+</html>
